@@ -1,0 +1,216 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+typedef struct LNode{
+    int data;
+    struct LNode *next;
+}LNode , *LinkList; 
+
+bool InitList_L(LinkList &L){ //创建一个空链表 &为引用符号
+    L = new LNode; //生成一个新结点作为头结点
+    if(!L){
+        return false;
+    }
+    L->next = NULL;
+    return true;
+}
+
+void CreateList_H(LinkList &L){//头插法(逐渐向前插入)
+    int n;
+    LinkList s;
+    L = new LNode;
+    L->next = NULL;
+    cout<<"请输入元素的个数n:"<<endl;
+    cin>>n;
+    cout<<"请依次输入n个元素:"<<endl;
+    cout<<"前插法创建链表..."<<endl;
+    while(n--){
+        s = new LNode;
+        cin>>s->data;//生成新结点的同时不能忘记输入数据
+        s->next = L->next;
+        L->next = s;
+    }
+}
+
+void CreateList_R(LinkList &L){//尾插法
+    //输入n个元素的值，建立带表头结点的单链表L
+    int n;
+    LinkList s ,r; //此处定义的r永远指向最后一个结点
+    L = new LNode; //先建立一个带头结点的空链表
+    L->next = NULL;
+    r = L;//尾指针r指向头结点
+    cout<<"请输入元素的个数n:"<<endl;
+    cin>>n;
+    cout<<"请依次输入n个元素:"<<endl;
+    cout<<"尾插法创建单链表..."<<endl;
+    while(n--){
+        s = new LNode;
+        cin>>s->data;
+        s->next = NULL;
+        r->next = s;//将新结点s插入尾结点*r之后
+        r = s;//r指向新的尾结点s
+    }
+}
+//下面的&符号可以直接传递变化后的e这样就可以代替return e
+bool GetElem_L(LinkList L, int i,int &e){//单链表的取值，取第i个元素的值
+    //查找到结点中的第i个值后将其付给e
+    int j;
+    LinkList p;
+    p = L->next;//L是头结点，p指向第一个结点
+    j = 1;//j为计数器
+    while(j<i && p){ //顺链域向后扫描知道p指向第i个元素
+        p = p->next;
+        j++;
+    }
+    if(!p || j>i){
+        return false; //i值不合法i>n或i<=0
+    }
+    e = p->data;
+    return true;
+}
+
+bool LocateElem_L(LinkList L, int e){//按值查找
+    //此处设置指针p是因为头指针不能动
+    LinkList p;
+    p=L->next;
+    while(p && p->data != e){
+        p = p->next;//p指向下一个结点
+    }
+    if(!p){
+        return false;
+    }
+    if(p->data == e){
+        return true;
+    }
+}
+
+bool ListInsert_L(LinkList &L ,int i , int e){//单链表的插入
+    int j;
+    LinkList p,s;
+    p = L;
+    j=0;
+    while(j<i-1 && p){
+        p = p->next;
+        j++;
+    }
+    if(!p || j>i-1){
+        return false;
+    }
+    s = new LNode;//创建一个新的结点
+    s->data = e;//一定记住要先定义s的数据域
+    s->next = p->next;//先操作不知道名字那一边
+    p->next = s;
+    return true;
+}
+
+bool ListDelete_L(LinkList &L , int i){//单链表的删除
+    LinkList p,s;
+    p = L;
+    int j = 0;
+    while(j<i-1 && p){
+        p = p->next;
+        j++;
+    }
+    if(!(p->next) || (j>i-1))
+        return false;           
+    s = p->next; //令s等于第i个结点
+    p->next = s->next;
+    delete s; //释放被删除的结点空间
+    return true;
+}
+
+void Listprint_L(LinkList L){//单链表的输出
+    LinkList p;
+    p = L->next;
+    while(p){
+        cout<<p->data<<' ';
+        p = p->next;
+    }
+    cout<<endl;
+}
+
+int main(){
+    int choise,i,x,e,k,z,f;
+    LinkList L;
+    cout<<"1. 初始化"<<endl;
+    cout<<"2. 创建单链表(前插法)"<<endl;
+    cout<<"3. 创建单链表(尾插法)"<<endl;
+    cout<<"4. 取值"<<endl;
+    cout<<"5. 查找"<<endl;
+    cout<<"6. 插入"<<endl;
+    cout<<"7. 删除"<<endl;
+    cout<<"8. 输出"<<endl;
+    cout<<"0. 退出"<<endl;
+    int choose = -1;
+    while(choose != 0){
+        cout<<"请输入数字选择:";
+        cin>>choise;
+        switch(choise){
+            case 1:
+                if(InitList_L(L))
+                    cout<<"初始化一个空的单链表成功"<<endl;
+                break;
+            case 2:
+                CreateList_H(L);
+                    cout<<"利用前插法向链表中插入成功"<<endl;
+                break;
+            case 3:
+                CreateList_R(L);
+                    cout<<"利用尾插法向链表中插入成功"<<endl;
+                break;
+            case 4:
+                cout<<"请输出想要取得第几个值:";
+                cin>>i;
+                bool a;
+                if(a = GetElem_L(L,i,e)){
+                    cout<<"判断出此式子为:"<<a<<endl;
+                    cout<<"所取得值为:"<<e<<endl;
+                }
+                break;
+            case 5:
+                cout<<"请输出想要查找的值:";
+                cin>>x;
+                bool b;
+                if(b = LocateElem_L(L,x)){
+                    if(b == 1){
+                        cout<<"此式子中可以查到x得存在"<<endl;
+                    }
+                    else
+                        cout<<"此式子中不能查到x"<<endl;
+                }
+                break;
+            case 6:
+                cout<<"请分别输入您想要插入得值与其插入的位置:";
+                cin>>k>>z;
+                bool m;
+                if(m = ListInsert_L(L,z,k)){
+                    if(m == 1){
+                        cout<<"此式子插入操作成功"<<endl;
+                    }
+                    else
+                        cout<<"此式子插入操作失败"<<endl;
+                }
+                break;
+            case 7:
+                cout<<"请输入您想要删除第几个结点:";
+                cin>>f;
+                bool v;
+                if(v = ListDelete_L(L,f)){
+                    if(v == 1){
+                        cout<<"此式子删除成功"<<endl;
+                    }
+                    else
+                        cout<<"此式子删除未能删除"<<endl; 
+                }
+                break;
+            case 8:
+                cout<<"可得到的链表为:"<<endl;
+                Listprint_L(L);
+                break;
+            case 0:
+                choose++;
+                break;
+        }
+    }
+    system("pause");
+}
