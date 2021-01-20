@@ -1,0 +1,51 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+typedef struct LNode {//双向链表定义
+	int data;
+	struct LNode* next;
+	struct LNode* prior;//此出的指针为前驱指针指向前一个元素的指针
+}DLNode , *DLinkList;
+
+void InitDList_M(DLinkList& L) {
+	L = new DLNode;
+	if (!L) {
+		cout << "创建双链表L失败" << endl;
+		return;
+	}
+	L->next = NULL;
+	L->prior = NULL;
+	cout << "双向链表初始化完成" << endl;
+}
+
+void InsertDList_I(DLinkList& L, int i, int e) {//在双向链表中的第i个位置插入结点
+	DLinkList p;
+	DLinkList s = L;
+	while (s && i > 0) {
+		s = s->next;
+		i--;
+	}
+	p = new DLNode;
+	p->prior = s->prior;
+	s->prior->next = p;
+	s->prior = p;
+	p->next = s;
+}
+
+void DeleteDList_O(DLinkList& L, int i) {//删除双向链表操作
+	DLinkList s;
+	s = L;
+	while (s && i > 0) {
+		s = s->next;
+		i--;
+	}
+	s->prior->next = s->next;
+	s->next->prior = s->prior;
+	delete s;
+	cout << "删除双向链表成功" << endl;
+}
+
+int main() {
+
+}
