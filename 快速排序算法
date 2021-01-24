@@ -1,0 +1,40 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+#define N 100
+
+//快速排序的思想就是定义两个下标分别为排序数组左下标的左侧i，和右下标的右侧j
+//定义一个排序数组的数值q[(l+r)/2]，如果q[i]<q[(l+r)/2]将下标向右移动,如果q[j]>q[(l+r)/2]将其向右移动
+//中间如果碰到q[i]>=q[(l+r)/2]则左侧下标停止移动，右侧同理如果q[j]<=q[(l+r)/2]则下标停止移动
+//此时左侧与右侧的值交换，交换之后将左右两侧分别移动一位继续判断直到i>=j
+void quick_sort(int q[], int l, int r){//O(nlog n)
+	/*此时的l表示他的左下标 ， r表示他的右下标*/
+	if (l >= r) return;
+	/*上面的if判断如果左下标不小于右下标就说明该排序中只有一个数字或者没有数字不需要排序*/
+	int x = q[(l+r)/2], i = l - 1, j = r + 1;
+	while (i < j){
+		do i++; while (q[i] < x);
+		do j--; while (q[j] > x);
+		if (i < j) swap(q[i], q[j]);
+	}
+
+	quick_sort(q , l , j);//此时小于等于q[l]的都已经在左侧此时再将左侧按照上面的进行排序
+	quick_sort(q, j + 1, r);//此时大于等于q[l]的都已经再右侧此时再将右侧按照上面的进行排序
+}
+
+
+int main(){
+	int n;
+	scanf("%d" , &n);
+	int a[N];
+	for (int i = 0; i < n; i++){
+		scanf("%d", &a[i]);
+	}
+
+	quick_sort(a, 0, n - 1);
+
+	for (int i = 0; i < n; i++){
+		printf("%d ", a[i]);
+	}
+	return 0;
+}
