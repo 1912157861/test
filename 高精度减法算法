@@ -1,0 +1,62 @@
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+
+//此时是判断是否有A > B
+bool cmp(vector<int> &A, vector<int> &B){//用来判断容器A和B中存储的数字谁大
+	if (A.size() != B.size()) return A.size() > B.size();
+	for (int i = A.size() - 1; i >= 0; i--){
+		if (A[i] != B[i])
+			return A[i] > B[i];
+	}
+	return true;//此时是A和B相同的情况也是满足的
+}
+
+vector<int> sub(vector<int> &A, vector<int> &B){//对A，B进行减法操作
+	vector<int> C;
+	for (int i = 0, t = 0; i < A.size(); i++){
+		t = A[i] - t;
+		if (i < B.size()) t = t - B[i];
+		C.push_back((t + 10) % 10);
+		if (t < 0) t = 1;
+		else t = 0;
+	}
+	
+	while (C.size() > 1 && C.back() == 0)//此处beck()函数是容器C中末尾的元素
+		//此时判断A - B之后的数中是否会出现003这样的前缀0
+		//如果出现前缀0就将其丢掉
+		C.pop_back();//pop_back是将满足以上条件的元素弹出容器
+	return C;
+}
+
+int main(){
+	string a, b;//因为大整数的位数比较多所以用字符串读进来
+	//定义的字符串都是字符数组
+	vector<int> A, B;//此处的vector为c++中的一个容器类似于数组
+	//vector的容器可以提供push_back函数相当于将数组中的元素插入到vector容器中
+	//在求字符串长度是可以使用函数size()与length()的函数作用是一样的
+	//而且size()函数也可以获取vector容器变量的长度
+	cin >> a >> b;
+	for (int i = a.size() - 1; i >= 0; i--){
+		A.push_back(a[i] - '0');//因为a是string类型的所以将其压进A容器中的时候需要减去字符0来转换成整数
+	}
+	for (int j = b.size() - 1; j >= 0; j--){
+		B.push_back(b[j] - '0');
+	}
+	if (cmp(A, B)){//此时判断出A是大于B的
+		auto C = sub(A, B);//那么此时高精度减法是正数
+		for (int i = C.size() - 1; i >= 0; i--){
+			printf("%d", C[i]);
+		}
+		printf("\n");
+	}
+	else{
+		auto C = sub(B, A);//此时判断出A是小于B的所以此时结果是负数
+		printf("-");//所以此时的运算是先打印一个符号并将A，B位置交换计算B-A，最后取他的负数
+		for (int i = C.size() - 1; i >= 0; i--){
+			printf("%d", C[i]);
+		}
+		printf("\n");
+	}
+}
