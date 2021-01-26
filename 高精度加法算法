@@ -1,0 +1,48 @@
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+
+const int N = 1e6 + 10;//此处N没什么用
+
+
+vector<int> add(vector<int> &A, vector<int> &B){
+	vector<int> C;
+
+	int t = 0;//此处的t为进位
+	for (int i = 0; i < A.size() || i < B.size(); i++){
+		if (i < A.size()) t = t + A[i];//先计算个位
+		if (i < B.size()) t = t + B[i];//此时算出的t为两个位数的值相加并且带有之前位数相加产生的进位
+		C.push_back(t % 10);//将A[i]+B[i]的值放进容器C中
+		t = t / 10;//此式判断A[i] + B[i]是否有进位
+		//如果此时的t是大于10的则说明有进位那么t/10可得到1作为进位进行之后的运算
+	}
+	if (t) C.push_back(1);//此时判断最高位的加法之后是否有进位
+	//如果有进位则在数字的最前面加上1
+
+	return C;
+
+}
+
+//大整数的存储 用数组存储大整数的位数，数组从零开始存储个位
+int main(){
+	string a, b;//因为大整数的位数比较多所以用字符串读进来
+	//定义的字符串都是字符数组
+	vector<int> A, B;//此处的vector为c++中的一个容器类似于数组
+	//vector的容器可以提供push_back函数相当于将数组中的元素插入到vector容器中
+	//在求字符串长度是可以使用函数size()与length()的函数作用是一样的
+	//而且size()函数也可以获取vector容器变量的长度
+	cin >> a >> b;
+	for (int i = a.size() - 1; i >= 0; i--){
+		A.push_back(a[i] - '0');//因为a是string类型的所以将其压进A容器中的时候需要减去字符0来转换成整数
+	}
+	for (int j = b.size() - 1; j >= 0; j--){
+		B.push_back(b[j] - '0');
+	}
+
+	auto C = add(A, B);
+	//auto是会自己推断C的返回类型，此处等价于vector<int> C
+	for (int i = C.size() - 1; i >= 0; i--){
+		printf("%d\n", C[i]);
+	}
+}
