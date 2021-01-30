@@ -1,0 +1,35 @@
+#include<iostream>
+using namespace std;
+//差分的定义
+//其实差分就是前缀和的逆运算 
+//例如: a1 , a2 , a3 , ..... , an   b1 , b2 , b3 , ......... , bn;
+//其中ai = b1 + b2 + b3 + ...... + bi //此时a叫做b的前缀和 
+//b1 = a1 - a0  , b2 = a2 - a1 .... , bn = an - a(n-1) 则称b是a的差分
+
+const int N = 100010;
+int  n, m;
+int a[N], b[N];
+
+void insert(int l, int r, int c){//此处是在范围l到r中每个数加c
+	b[l] = b[l] + c;
+	b[r + 1] = b[r + 1] - c;//一维差分公式
+}
+
+int main(){
+	scanf("%d%d", &n, &m);
+	for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
+
+	for (int i = 1; i <= n; i++) insert(i, i, a[i]);
+
+	while (m--){
+		int l, r, c;
+		scanf("%d%d%d", &l, &r, &c);
+		insert(l, r, c);
+	}
+
+	for (int i = 1; i <= n; i++) b[i] = b[i] + b[i - 1];//进行其本身的前缀和
+
+	for (int i = 1; i <= n; i++) printf("%d ", b[i]);
+
+	return 0;
+}
