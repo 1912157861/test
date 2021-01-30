@@ -1,0 +1,30 @@
+#include<iostream>
+using namespace std;
+//前缀和就是数组中的前i个数的和，但是注意数组是从1开始的
+//且前缀和的S[0] = 0
+
+const int N = 1e6 + 2;
+
+int n, m;
+int a[N], q[N];
+
+int main(){
+	//语句ios::sync_with_stdio(false);
+	//上面的语句的作用是加快cin的速度，但是副作用就是输入不可以使用scanf了
+
+	scanf("%d%d", &n, &m);
+	for (int i = 1; i <= n; i++){
+		scanf("%d", &a[i]);
+	}
+
+	for (int i = 1; i <= n; i++){//前缀和的初始化
+		q[i] = q[i - 1] + a[i];//将q[]数组挨个赋值成没想都是前i项的和
+	}
+	
+	while (m--){
+		int l, r;
+		scanf("%d%d", &l, &r);
+		printf("%d", q[r] - q[l - 1]);//区间和的计算
+	}
+	return 0;
+}
