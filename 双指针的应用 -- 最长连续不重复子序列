@@ -1,0 +1,24 @@
+#include<iostream>
+using namespace std;
+
+const int N = 1e6 + 2;
+int n;
+int a[N] , q[N];//此时的数组q是用来判断重复元素的
+
+int main(){
+    scanf("%d" , &n);
+    for(int i =0;i<n;i++){
+        scanf("%d" , &a[i]);
+    }
+    int res = 0;
+    for(int i=0 , j=0 ; i<n ; i++){
+        q[a[i]]++;//此时将a[i]作为下标在q中存储并且加一
+        while(q[a[i]] > 1){//所以如果数组q中存储的相同的下标数量超过一的话就是有重复元素
+            q[a[j]]--;//此时将存储在数组q中第一个元素删除掉
+            j++;//并将下标j加一
+        }
+        res = max(res , i - j + 1);
+    }
+    cout<<res<<endl;
+    return 0;
+}
