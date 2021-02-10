@@ -1,0 +1,57 @@
+#include<iostream>
+using namespace std;
+
+const int N = 100010;
+int e[N] , ne[N] , head , idx;
+
+void init(){
+    head = -1;
+    idx = 0;
+}
+
+void insert(int x){//在头插入结点
+    e[idx] = x;
+    ne[idx] = head;
+    head = idx;
+    idx++;
+}
+
+void insert2(int k , int x){//此处是将点x插入到k得后面
+    e[idx] = x;
+    ne[idx] = ne[k];
+    ne[k] = idx;
+    idx++;
+}
+
+void Delete(int k){//此处是删除k后面的点
+    ne[k] = ne[ne[k]];
+}
+
+int main(){
+    int k , r;
+    int n;
+    scanf("%d" , &n);
+    init();
+    while(n--){
+        char p;
+        cin>>p;
+        if(p == 'H'){
+            cin>>k;
+            insert(k);
+        }
+        else if(p == 'D'){
+            cin>>r;
+            if(r == 0) head = ne[head];
+            else Delete(r - 1);
+        }
+        else{
+            cin>>k>>r;
+            insert2(k - 1 , r);
+        }
+    }
+     
+    for(int i=head;i!=-1;i = ne[i]){
+        printf("%d " , e[i]);
+    }
+    return 0;
+}
