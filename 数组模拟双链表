@@ -1,0 +1,87 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+const int  N = 100010;
+int l[N] , r[N] , e[N] , idx;
+
+void init(){
+    r[0] = 1 , l[1] = 0;//此时是将0作为左节点，1作为右节点
+    idx = 2;//所以此时节点下标从2开始
+}
+
+void insertl(int x){//在最左侧添加一个结点，即0的后面
+    e[idx] = x;
+    r[idx] = r[0];
+    l[idx] = 0;
+    l[r[idx]] = idx;
+    r[0] = idx;
+    idx++;
+}
+
+void insertr(int x){//在最右侧添加一个结点，即1的前面
+    e[idx] = x;
+    r[idx] = 1;
+    l[idx] = l[1];
+    r[l[idx]] = idx;
+    l[1] = idx;
+    idx++;
+}
+
+void insertL(int k , int x){//在下标为k的左侧添加一个结点
+    e[idx] = x;
+    r[idx] = k;
+    l[idx] = l[k];
+    r[l[k]] = idx;
+    l[k] = idx;
+    idx++;
+}
+
+void insertR(int k , int x){//在下标为k的右侧添加一个结点
+    e[idx] = x;
+    l[idx] = k;
+    l[r[k]] = idx;
+    r[idx] = r[k];
+    r[k] = idx;
+    idx++;
+}
+
+void Delete(int k){//删除结点
+    r[l[k]] = r[k];
+    l[r[k]] = l[k];
+}
+
+int main(){
+    int m , s , v;
+    cin>>m;
+    init();
+    while(m-- > 0){
+        string p;
+        cin>>p;
+        if(p == "L"){
+            cin>>v;
+            insertl(v);
+        }
+        else if(p == "R"){
+            cin>>v;
+            insertr(v);
+        }
+        else if(p == "D"){
+            cin>>s;
+            Delete(s + 1);
+        }
+        else if(p == "IL"){
+            cin>>s>>v;
+            insertL(s + 1, v);
+        }
+        else{
+            cin>>s>>v;
+            insertR(s + 1 , v);
+        }
+    }
+    
+    for(int i=r[0];i != 1 ;i = r[i]) printf("%d " , e[i]);
+    //此处是从0的后面的结点开始便利，一直遍历到1如果i==1就跳出
+    
+    return 0;
+}
