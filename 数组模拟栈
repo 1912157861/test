@@ -1,0 +1,48 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+const int N = 100010;
+int m;
+int stk[N] , tt = -1;//此处的tt表示栈中的元素下标
+
+void push(int x){
+    stk[++tt] = x;
+} 
+
+void pop(){
+    tt--;
+}
+
+void empty(){
+    if(tt >= 0) printf("NO\n");
+    else printf("YES\n");
+}
+
+int query(){
+    return stk[tt];
+}
+
+int main(){
+    cin>>m;
+    int k , p;
+    while(m--){
+        string s;
+        cin>>s;
+        if(s == "push"){
+            cin>>k;
+            push(k);
+        }
+        else if(s == "pop"){
+            pop();
+        }
+        else if(s == "empty"){
+            empty();
+        }
+        else{
+            p = query();
+            printf("%d\n" , p);
+        }
+    }
+    return 0;
+}
