@@ -1,0 +1,46 @@
+#include<iostream>
+using namespace std;
+
+const int N = 100010;
+int m;
+int q[N] , tt = -1 , qq;
+
+void push(int x){
+    q[++tt] = x;
+}
+
+void pop(){
+   qq++;
+}
+
+void empty(){
+    if(qq > tt) printf("YES\n");
+    else printf("NO\n");
+}
+
+int query(){
+   return q[qq++]; 
+}
+int main(){
+    cin>>m;
+    while(m--){
+        string p;
+        int k;
+        cin>>p;
+        if(p == "push"){
+            cin>>k;
+            push(k);
+        }
+        else if(p == "pop"){
+            pop();
+        }
+        else if(p == "empty"){
+            empty();
+        }
+        else{
+            k = query();
+            printf("%d\n" , k);
+        }
+    }
+    return 0;
+}
