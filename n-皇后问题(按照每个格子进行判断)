@@ -1,0 +1,57 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+const int N = 10;
+int n;
+char g[N][N];
+bool row[N] , col[N] , dg[N] , udg[N];
+
+//该方法是通过对每一个格子进行判断是否可以放皇后
+
+void dfs(int x , int y , int u){
+    
+    if(y == n) y = 0 , x++;//此处是判断边界问题,如果y到最右边的时候就让判断下一行的第一个格子
+    
+    if(x == n){//此时是判断到最后一行
+        if(u == n){//此时填放了所有的皇后
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+                    printf("%c" , g[i][j]);
+                }
+                puts("");
+            }
+            puts("");
+        }
+        return;
+    }
+    
+    
+    dfs(x , y + 1 , u);//此时是不填皇后,对下一个格子进行判断是否要判断填不填皇后
+    
+    
+    //因为是每个格子都判断所以不需要进行循环
+    if(!row[x] && !col[y] && !dg[x + y] && !udg[x -y + n]){//此时填皇后
+        g[x][y] = 'Q';
+        row[x] = col[y] = dg[x + y] = udg[x - y + n] = true;
+        dfs(x + 1 , 0 , u + 1);
+        row[x] = col[y] = dg[x + y] = udg[x - y + n] = false;//恢复现场
+        g[x][y] = '.';
+    }
+}
+
+int main(){
+    cin>>n;
+    
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            g[i][j] = '.';
+        }
+    }
+    
+    dfs(0,0,0);
+    
+    return 0;
+}
