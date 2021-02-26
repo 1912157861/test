@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+const int N = 10;
+int n;
+char g[N][N];
+bool col[N] , dg[N] , udg[N];
+
+void dfs(int u){
+    
+    if(u == n){
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                printf("%c" , g[i][j]);
+            }
+            puts("");
+        }
+        puts("");
+        return;
+    }
+    
+    for(int i=0;i<n;i++){//此处遍历的是行
+        if(!col[i] && !dg[u + i] && !udg[n - u + i]){//判断列,正对角线,反对角线上的位置是否可以放Q
+            g[i][u] = 'Q';
+            col[i] = dg[u + i] = udg[n - u + i] = true;//这个时候上面放置Q的位置的列,正对角线,反对角线都不能放置Q
+            dfs(u + 1);//开始寻找下一个皇后
+            col[i] = dg[u + i] = udg[n - u + i] = false;//恢复现场
+            g[i][u] = '.';
+        }
+    }
+}
+
+int main(){
+    
+    cin>>n;
+    
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            g[i][j] = '.';
+        }
+    }
+    
+    dfs(0);
+    
+    return 0;
+}
