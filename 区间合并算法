@@ -1,0 +1,69 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+//pair排序的时候会先对左端排序在对右端排序
+typedef pair<int , int> PII;
+
+const int N = 100010;
+int n;
+vector<PII> segs;
+
+//区间合并的操作为
+// 1. 先对容器segs进行排序操作
+// 2. 之后开始判断区间的右端是否大于后面的区间的左端
+//如果前面的区间的右端小于左端的话就可以将让后面的区间的右端赋值给前面的右端
+void merge(vector<PII> &segs)
+{
+    vector<PII> res;//此容器用来保存答案
+    
+    sort(segs.begin() , segs.end());//先将segs的左端区间进行排序
+    
+    int st = -2e9 , ed = -2e9;//st代表的是区间的左端，ed代表的是区间的右端
+    //刚开始将左右两端赋值为区间的最小值
+    
+    for (auto item : segs)//对容器segs进行遍历
+    {
+        if (ed < item.first) //此时如果区间的右端小于区间的左端
+        {
+            if (st != -2e9) res.push_back({st , ed});
+            //此时区间的左端不是无穷小，那么此时就是前后两个区间不可以进行合并
+            
+            st = item.first , ed = item.second;
+            //此时是st为最开始的无穷小的时候那么此时就让区间的左端赋值为item.first
+            //右端赋值为item.second
+        }   
+        
+        else ed = max(ed , item.second);
+        //此时是前区间的右端是大于等于后区间的左端，这也就是后面的区间和
+        //前面的区间是有重复内容的,这时要找到后面的区间的右端将前后两个区
+        //间变为一个区间也就是将前面的右端赋值为后面的右端。
+    }
+    
+    if (st != -2e9) res.push_back({st , ed});
+    //此时是将容器中的最后一个区间插入到答案容器res中
+    
+    segs = res;//将答案容器res赋值给segs并通过&(引用)将答案返回给segs容器中
+    
+}
+
+int main()
+{
+    cin >> n;
+    
+    for (int i = 0 ; i < n ; i ++)
+    {
+        int l , r;
+        cin >> l >> r;
+        segs.push_back({l , r});
+        //将坐标l和r插入到容器segs中的
+    }
+    
+    merge(segs);//对容器segs进行操作最后将答案弄到segs中
+    
+    cout << segs.size() << endl;
+    return 0;
+    
+}
