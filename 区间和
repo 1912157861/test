@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstdio>
+
+using namespace std;
+
+typedef pair<int , int> PII;
+
+const int N = 300010;
+int n , m;
+int a[N] , s[N];
+//1 3 4 7
+vector<int> alls;
+vector<PII> add , query;
+
+int find(int x)
+{
+    int l = 0 , r = alls.size() - 1;//因为此次的二分查找是要在存储下标的容器中进行查找到想要的下标
+    //所以要在alls的容器中进行查找
+    while (l < r)
+    {
+        int mid = (l + r) / 2;
+        if (alls[mid] >= x) r = mid;
+        else l = mid + 1;
+    }
+    
+    return l + 1;//此时是返回找到在alls存储的该下标的下标
+    //这是让这个下标加上一就是该要插入的数字离散化之后的下标
+}
+
+int main()
+{
+    cin >> n >> m;
+    for (int i =  0 ; i < n ; i ++)
+    {
+        int x , c;
+        cin >> x >> c;
+        add.push_back({x , c});//将下标x和c插入到容器add中
+        
+        alls.push_back(x);//将下标插入到alls容器中
+    }
+    
+    for (int i = 0 ; i < m ; i ++)
+    {
+        int  l ,r;
+        cin >> l >> r;
+        query.push_back({l ,r});//将下标l和下标r插入到query中
+        alls.push_back(l);
+        alls.push_back(r);//现在alls容器存储了所有的下标
+    }
+    
+    //去重
+    sort(alls.begin() , alls.end());//对alls容器进行排序
+    alls.erase(unique(alls.begin() , alls.end()) , alls.end());
+    //此处是先将alls中的下标进行去重之后将重复的元素放到尾部然后将其到容器尾部的重复元素进行删除
+    
+    //插入处理
+    for (auto item : add)
+    {
+        int x = find(item.first);//通过二分查找到要插入值的下标在alls容器存储中的下标并将其加一
+        //此时的下标就是离散后的下标，因为存储要插入的下标的下标是小的
+        //将要存储的内容的下标弄为要插入的下标的下标的加一就可以做到了离散化的操作
+        a[x] += item.second;//将下标返回后将要插入的数值插入到数组a中
+    }
+    
+    //处理前缀和
+    for (int i = 1 ; i <= alls.size() ; i ++) s[i] = s[i - 1] + a[i];
+    
+    
+    for (auto item : query)
+    {
+        int l = find(item.first) , r = find(item.second);
+        cout << s[r] - s[l - 1] << endl;
+    }
+    return 0;
+    
+}
