@@ -1,0 +1,81 @@
+#include <iostream>
+
+using namespace std;
+
+const int N = 510;
+//此时e存储的是前者到后者的距离是多少,dis[]数组存储的是原结点到根节点的最小距离
+//book[]数组表示该点是否被走过了
+int e[N][N] , dis[N];
+
+int main()
+{
+    int n , m;
+
+    while (cin >> n >> m)
+    {
+        int book[N] = {0};
+        int inf = 99999999;//此时让inf表示最大值
+        int count = 0 , sum = 0;//count用来记录生成树中的结点的个数
+        //sum用来存储路径的长度之和
+        
+        for (int i = 1 ; i <= n ; i ++)
+        {
+            for (int j = 1; j <= n; j ++)
+            {
+                if (i == j) e[i][j] = 0;
+                else e[i][j] = inf;//此时表示两个点没有连通
+            }
+        }
+        
+        //开始读边
+        int t1 , t2 , t3;
+        for (int i = 1; i <= m; i ++)
+        {
+            cin >> t1 >> t2 >> t3;
+            e[t1][t2] = t3;
+            e[t2][t1] = t3;
+        }
+        
+        //初始化dis数组,这里以一号为根节点,存储他到各个节点的距离
+        for (int i = 1 ; i <= n ; i ++)
+        {
+            dis[i] = e[1][i];
+        }
+        
+        book[1] = 1;//因为以1作为根节点进行存储所以要先将1改为走过的形式
+        count ++;
+        int min;//用来存储最小值
+        
+        int u;
+        
+        while (count < n)
+        {
+            min = inf;
+            for (int i = 1 ; i <= n ; i ++)
+            {
+                if (book[i] == 0 && dis[i] < min)
+                {//此时表示该点没有走过并且此时该点到根节点的距离是小于当前的最小值
+                    min = dis[i];
+                    u = i;//用j来代替当前连上的结点
+                }
+            }
+            
+            book[u] = 1;
+            count ++;
+            sum += dis[u];
+            //此时将j结点设置为走过的,count存储的结点数加一,sum存储的最小边的数也加上当前最小值的边
+        
+            for (int k = 1 ; k <= n ; k ++)
+            {
+                if (book[k] == 0 && dis[k] > e[u][k])
+                    dis[k] = e[u][k];
+            }
+            
+        }
+        
+        cout << sum << endl;
+    }
+    
+    return 0;
+    
+}
