@@ -1,0 +1,57 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+const int N = 510;
+int n , m;
+int st[N];//用来判断结点是否被更新过
+int g[N][N];//因为是稠密图所以要用邻接矩阵进行存储
+int dist[N];//dist[]数组是用来存储每个结点到源节点的距离
+
+int Dijkstra()
+{
+    memset(dist , 0x3f , sizeof dist);
+    dist[1] = 0;//先对dist[]数组进行初始化
+    
+    for (int i = 0 ; i < n ; i ++)
+    {
+        int t = -1;
+        for (int j = 1 ; j <= n ; j ++)
+        {
+            if (!st[j] && (t == -1 || dist[t] > dist[j]))
+            {
+                t = j;//将t赋值为j
+            }
+        }//此处找到与t结点相连的最短的边
+        
+        if (t == n) break;
+        st[t] = 1;
+        
+        for (int j = 1 ; j <= n ; j ++)
+        {
+            dist[j] = min(dist[j] , dist[t] + g[t][j]);
+        }//判断是否有两条边上的
+    }
+    
+    if (dist[n] == 0x3f3f3f3f) return -1;
+    
+    return dist[n];
+}
+
+int main()
+{
+    cin >> n >> m;
+    
+    memset(g , 0x3f , sizeof g);
+    
+    for (int i = 0 ; i < m ; i ++)
+    {
+        int a , b , c;
+        cin >> a >> b >> c;
+        g[a][b] = min(g[a][b] , c);
+    }//此处用来判断自环
+    
+    cout << Dijkstra() << endl;
+    return 0;
+    
+}
