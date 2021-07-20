@@ -1,0 +1,96 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+//namespace 定义的是一个域，表示命名空间
+//目的是为了解决c语言命名冲突的问题
+//C++库为了防止命名冲突，把自己库里面的东西都定义在一个std的命名空间中
+//要使用标准库中的东西有三种方式
+// 1.指定命名空间:  std::cout << "hello world" << std::endl; ->比较麻烦
+// 2.把std整个展开: using namespace std;该语句将std库里的东西都定义到全局域中了，可以直接用其中的参数
+// 2看起来是方便的，但是如果自己定义的东西和库冲突了就没办法解决了
+// 在规范的工程项目中是不推荐这种方式的 -> 日常练习可以使用
+// 3.对部分长用的库里面的东西展开 
+// using std::cout; 
+// using std::endl;把在项目中常用的cout语句和endl语句进行展开
+#include <iostream>//c++中头文件不用带.h是为了和老的头文件进行区分
+#include <stdio.h>
+#include <string.h>
+
+using namespace std;
+
+
+namespace wr
+{
+	int scanf = 10;
+	int strlen = 20;
+	namespace N3//此时在namespace中可以嵌套namespace
+	{//说明命名空间可以嵌套使用
+		int sum = 10;
+	}
+
+	//在不同文件中的相同的命名空间，其内容会被合并在一起
+	//但是在相同的命名空间中是不可以定义相同的参数的
+	//例如在另一个文件定义wr就不能定义scanf了
+}
+
+//缺省参数
+void Ts(int a = 0)
+{
+	cout << a << endl;
+}
+
+//全缺省参数
+void Ys(int a = 0, int b = 10, int c = 40)
+{
+	cout << a << ' ' << b << ' ' << c << endl;
+}
+
+//半缺省参数
+//半缺省参数是从右向左的
+//缺省参数就是让函数中的参数自己本来就带一个值，这样调用的时候可以不写有值的参数
+void Ks(int a, int b = 10, int c = 30)
+{
+	cout << a << ' ' << b << ' ' << c << endl;
+}
+
+//函数重载
+int Add(int a, int b)
+{
+	return a + b;
+}
+
+int Add(int a, int b, int c)
+{
+	return a > b ? a : c;
+}
+
+bool Add(char a, char b)
+{
+	return a > b ? true : false;
+}
+
+int main()
+{
+	//int scanf = 10;
+
+	//scanf("%d", &scanf);
+	//上面的语法会报错是因为c语言库中有两个相同名称的函数，所以上面的代码出现命名冲突
+	//c语言解决不了该冲突问题
+
+	//想要打印scanf和strlen的时候是先从局部开始进行查找
+	//因为再局部没有找到之后到全局去找，找到了#include <stdio.h>和#include <string.h>
+	//所以此时打印的是当前两个函数的地址
+	//所以用namespace定义一个域之后输出其定义的域中的数值如下：
+	printf("%d\n", bit::scanf);
+	printf("%d\n", bit::strlen);
+	//此时利用namespace定义域就可以将域中的数据进行输出
+	//在namespace中不仅可以定义变量还可以定义函数
+	Ts(10);
+	Ts();
+
+	int b = 10;
+	int& a = b;//&为引用符号，这a和b访问的是同一个空间
+	//此时a只是b的一个别名，但是取两个的地址是一样的
+	int& c = b;//此时还可以将c作为b的别名
+	// 此时a，b，c访问的空间是一块的，此时改变一个数值另外几个都随之改变
+	return 0;
+
+}
